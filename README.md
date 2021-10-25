@@ -1,5 +1,5 @@
 # API for Checkr
-A simple Django project to fetch image from [NASA](https://api.nasa.gov/index.html). 
+A Django project to fetch image from [NASA](https://api.nasa.gov/index.html) and provide rating to it.
 
 ## Features
 * Image saved to database
