@@ -16,6 +16,3 @@ class Rating(models.Model):
             MaxValueValidator(5),
             MinValueValidator(1)
         ])
-
-    def __str__(self):
-        return self.stars

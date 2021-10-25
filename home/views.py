@@ -1,18 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
+from django.views.generic import UpdateView
 from home.forms import RatingForm, UserRegistrationForm
 from django.contrib import messages
 
-from home.models import NasaImage
+from home.models import NasaImage, Rating
 from django.core.files import File 
 from io import BytesIO
 import requests
-
 from django.http import HttpResponse
-
 import uuid   
-
-
+from django.contrib.auth.models import User
 
 import urllib.request
 
@@ -25,8 +23,15 @@ class HomeView(ListView):
     def get(self, request):
         """ GET a list of Pages. """
         nasaPics = NasaImage.objects.all()
-        
-        return render(request, 'home/home.html', {'nasaImage': nasaPics[len(nasaPics)-1]})
+        nasaPic = nasaPics[len(nasaPics)-1]
+        nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
+        nasaRating = None
+        for rating in nasaRatings:
+            print(rating.username, request.user.username)
+            if rating.username == request.user:
+                nasaRating = rating
+                break
+        return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating})
 
 
 def register(request):
@@ -56,7 +61,14 @@ def downloadImage(request):
     nasaPic.save()
     nasaPics = NasaImage.objects.all()
     # print("imagename", nasaPics[len(nasaPics)-1].image.name)
-    return render(request, 'home/home.html', {'nasaImage': nasaPics[len(nasaPics)-1]})
+    nasaPic = nasaPics[len(nasaPics)-1]
+    nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
+    nasaRating = None
+    for rating in nasaRatings:
+        if rating.username == request.user:
+            nasaRating = rating
+            break
+    return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating})
 
 
 def add_rating(request):
@@ -73,7 +85,25 @@ def add_rating(request):
           rating.username = request.user
           rating.nasaImage = nasaImage
           rating.save()
-          return redirect('home/home.html')
+          return redirect('/')
     else:
         form = RatingForm()
     return render(request, 'home/rating.html', {'form': form, 'nasaImage': nasaImage})
+
+def update_rating(request):
+    nasaPics = NasaImage.objects.all()
+    nasaPic = nasaPics[len(nasaPics)-1]
+    nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
+    nasaRating = None
+    for rating in nasaRatings:
+        print(rating.username, request.user.username)
+        if rating.username == request.user:
+            nasaRating = rating
+            break
+
+    
+class RatingUpdateView(UpdateView):
+    model = Rating
+    template_name = 'home/rating.html'
+    form_class = RatingForm
+    success_url = '/'

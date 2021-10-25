@@ -9,8 +9,13 @@
     <img src="{{ nasaImage.image.url }}" width="auto" height="600">
 </div>
 
-
-<a href="{% url 'rating-create-page' %}" class="btn btn-success">Add a rating</a>
-
+{% if request.user.is_authenticated %}
+    {% if nasaRating %}
+        <h5>{{ user.username }}'s Rating: {{ nasaRating.stars }}</h5> 
+        <a href="{% url 'rating-update-page' nasaRating.pk %}" class="btn btn-success">Update a rating</a>
+    {% else %}
+        <a href="{% url 'rating-create-page' %}" class="btn btn-success">Add a rating</a>
+    {% endif %}
+{% endif %}
 
 {% endblock content%}
