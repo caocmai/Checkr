@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>testing</p>
+
+<a href="{% url 'get-pic' %}" class="btn btn-primary ml-2">Get Latest NASA Image</a>
+
+<div >
+
+    <img src="{{ nasaImage.image.url }}" width="auto" height="600">
+</div>
+
 {% endblock content%}
