@@ -9,7 +9,7 @@
     <img src="{{ nasaImage.image.url }}" width="auto" height="600">
 </div>
 
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and nasaRatings == None %}
     {% if nasaRating %}
         <h5>{{ user.username }}'s Rating: {{ nasaRating.stars }}</h5> 
         <a href="{% url 'rating-update-page' nasaRating.pk %}" class="btn btn-success">Update a rating</a>
@@ -17,5 +17,16 @@
         <a href="{% url 'rating-create-page' %}" class="btn btn-success">Add a rating</a>
     {% endif %}
 {% endif %}
+
+<a href="{% url 'see-all-ratings-page' %}" class="btn btn-primary ml-2">See all ratings</a>
+
+{% if nasaRatings != None %}
+
+{% for rating in nasaRatings %}
+    <h5>{{ rating.username.username }}'s Rating: {{ rating.stars }}</h5> 
+{% endfor %}
+<a href="{% url 'home-page' %}" class="btn btn-success">Back</a>
+{% endif %}
+
 
 {% endblock content%}

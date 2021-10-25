@@ -60,7 +60,6 @@ def downloadImage(request):
     nasaPic.image.save(str(uuid.uuid4())+".jpg", File(open(result[0], 'rb')))
     nasaPic.save()
     nasaPics = NasaImage.objects.all()
-    # print("imagename", nasaPics[len(nasaPics)-1].image.name)
     nasaPic = nasaPics[len(nasaPics)-1]
     nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
     nasaRating = None
@@ -71,7 +70,7 @@ def downloadImage(request):
     return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating})
 
 
-def add_rating(request):
+def addRating(request):
     """Add comment to a post"""
     nasaImages = NasaImage.objects.all()
     nasaImage = nasaImages[len(nasaImages)-1]
@@ -90,20 +89,19 @@ def add_rating(request):
         form = RatingForm()
     return render(request, 'home/rating.html', {'form': form, 'nasaImage': nasaImage})
 
-def update_rating(request):
+def seeAllRatings(request):
     nasaPics = NasaImage.objects.all()
     nasaPic = nasaPics[len(nasaPics)-1]
     nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
     nasaRating = None
-    for rating in nasaRatings:
-        print(rating.username, request.user.username)
-        if rating.username == request.user:
-            nasaRating = rating
-            break
+    return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating, 'nasaRatings': nasaRatings})
 
-    
+
+
 class RatingUpdateView(UpdateView):
     model = Rating
     template_name = 'home/rating.html'
     form_class = RatingForm
     success_url = '/'
+
+
