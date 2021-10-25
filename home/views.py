@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
-from home.forms import UserRegistrationForm
+from home.forms import RatingForm, UserRegistrationForm
 from django.contrib import messages
 
 from home.models import NasaImage
@@ -55,4 +55,25 @@ def downloadImage(request):
     nasaPic.image.save(str(uuid.uuid4())+".jpg", File(open(result[0], 'rb')))
     nasaPic.save()
     nasaPics = NasaImage.objects.all()
+    # print("imagename", nasaPics[len(nasaPics)-1].image.name)
     return render(request, 'home/home.html', {'nasaImage': nasaPics[len(nasaPics)-1]})
+
+
+def add_rating(request):
+    """Add comment to a post"""
+    nasaImages = NasaImage.objects.all()
+    nasaImage = nasaImages[len(nasaImages)-1]
+
+    form = RatingForm(request.POST)
+
+    if request.method == "POST":
+        if form.is_valid():
+          rating = form.save(commit=False)
+          # Need to do this for all models.ForeignKey!!!!!
+          rating.username = request.user
+          rating.nasaImage = nasaImage
+          rating.save()
+          return redirect('home/home.html')
+    else:
+        form = RatingForm()
+    return render(request, 'home/rating.html', {'form': form, 'nasaImage': nasaImage})
