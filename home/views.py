@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic import UpdateView
 from home.forms import RatingForm, UserRegistrationForm
@@ -6,22 +6,14 @@ from django.contrib import messages
 
 from home.models import NasaImage, Rating
 from django.core.files import File 
-from io import BytesIO
 import requests
-from django.http import HttpResponse
 import uuid   
 from django.contrib.auth.models import User
 
 import urllib.request
 
-
-# Create your views here.
-
 class HomeView(ListView):
-    """ Renders a list of all Pages. """
-
     def get(self, request):
-        """ GET a list of Pages. """
         nasaPics = NasaImage.objects.all()
         nasaPic = nasaPics[len(nasaPics)-1]
         nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
@@ -32,7 +24,6 @@ class HomeView(ListView):
                 nasaRating = rating
                 break
         return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating})
-
 
 def register(request):
     """To show a register form so a user can creat account"""
@@ -51,9 +42,6 @@ def downloadImage(request):
     url = "https://api.nasa.gov/planetary/apod?api_key=uQ7H6lYnPUYvkesIXi8CDO1XhZEEAJO8Wr0Q6oHU"
     resp = requests.get(url)
     print(resp.json()['url'])
-    # if resp.status_code != requests.codes.ok:
-    #     #  Error handling here
-    #     print("error")
     httpUrl = resp.json()['url']
     result = urllib.request.urlretrieve(httpUrl)
     nasaPic = NasaImage()            
@@ -69,9 +57,7 @@ def downloadImage(request):
             break
     return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating})
 
-
 def addRating(request):
-    """Add comment to a post"""
     nasaImages = NasaImage.objects.all()
     nasaImage = nasaImages[len(nasaImages)-1]
 
@@ -80,7 +66,6 @@ def addRating(request):
     if request.method == "POST":
         if form.is_valid():
           rating = form.save(commit=False)
-          # Need to do this for all models.ForeignKey!!!!!
           rating.username = request.user
           rating.nasaImage = nasaImage
           rating.save()
@@ -95,8 +80,6 @@ def seeAllRatings(request):
     nasaRatings = Rating.objects.filter(nasaImage=nasaPic)
     nasaRating = None
     return render(request, 'home/home.html', {'nasaImage': nasaPic, 'nasaRating': nasaRating, 'nasaRatings': nasaRatings})
-
-
 
 class RatingUpdateView(UpdateView):
     model = Rating
