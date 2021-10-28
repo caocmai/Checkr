@@ -26,7 +26,7 @@ Go to `http://127.0.0.1:8000/` within the browser's address bar.
 ### Login
 ![](screenshots/login.png)
 
-### Fetch the NASA daily image
+### Fetch NASA daily image
 ![](screenshots/fetch.png)
 
 ### Rate NASA daily image
