@@ -11,7 +11,7 @@ A Django project to fetch image from [NASA](https://api.nasa.gov/index.html) and
 
 
 ## Run locally
-To run the project make sure you create a virtual environment and activate the environment. Once inside a virtual environment run `pip install -r requirements.txt` in the shell. 
+It is recommended that this project is run in a virtual environment. To run the project make sure you create a virtual environment and activate the environment. Once inside a virtual environment run `pip install -r requirements.txt` in the shell to install all the dependencies. 
 
 Then navigate to the directory of the project that contains the `manage.py` file and to run locally run `python manage.py runserver` to activate the server. 
 
