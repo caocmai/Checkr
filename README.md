@@ -2,12 +2,13 @@
 A Django project to fetch image from [NASA](https://api.nasa.gov/index.html) and provide rating to it.
 
 ## Features
-* Image saved to database
-* Ability to create user
+* Create user
 * Login/Logout
-* Can rate Nasa's daily image
-* Can update rating
-* Can view all ratings from other users
+* Fetch NASA's daily image
+* Rate NASA's daily image
+* Image saved to database
+* Update rating
+* View all ratings from other users
 
 
 ## Run locally
